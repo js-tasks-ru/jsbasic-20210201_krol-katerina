@@ -1,7 +1,6 @@
 function initCarousel() {
   let arrowRight = document.querySelector('.carousel__arrow_right'); //правая стрелка
   let arrowLeft = document.querySelector('.carousel__arrow_left'); //левая стрелка
-  let carouselContainer = document.querySelector('.carousel'); //контейнер, внутри которого двигаем иннер
   let carouselInner = document.querySelector('.carousel__inner'); //иннер, который будем двигать
   let carouselSlides = document.querySelectorAll('.carousel__slide'); //выбираем все слайды
   let transform = 0;
