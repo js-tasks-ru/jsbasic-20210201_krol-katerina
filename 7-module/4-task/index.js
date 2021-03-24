@@ -3,7 +3,6 @@ import createElement from '../../assets/lib/create-element.js';
 export default class StepSlider {
   constructor({ steps, value = 0 }) {
     this.elem = document.createElement('div');
-    //this.slider;
     this.steps = steps;
     this.value = value;
     this.createSlider();
@@ -21,7 +20,6 @@ export default class StepSlider {
       </div>
     `;
     this.elem.insertAdjacentHTML('beforeend', sliderCover);
-    //document.querySelector('.container').appendChild(this.slider);
 
     this.sliderSteps = this.elem.querySelector('.slider__steps');
     for(let i = 0; i < this.steps; i++) {
@@ -30,8 +28,6 @@ export default class StepSlider {
     }
     this.sliderSteps.firstElementChild.classList.add('slider__step-active');
 
-
-    //this.elem = this.slider;
     let thumb = this.elem.querySelector('.slider__thumb'),
       progress = this.elem.querySelector('.slider__progress'),
       sliderValue = this.elem.querySelector('.slider__value');
@@ -71,7 +67,6 @@ export default class StepSlider {
 
     thumb.addEventListener('pointerdown', () => {
       let slider = this.elem;
-      slider.classList.add('slider_dragging');
       thumb.style.position = 'absolute';
       thumb.style.zIndex = 1000;
 
@@ -79,6 +74,7 @@ export default class StepSlider {
       document.addEventListener('pointerup', onPointerUp);
 
       function onPointerMove(event) {
+        slider.classList.add('slider_dragging');
         let left = event.clientX - slider.getBoundingClientRect().left;
         let leftRelative = left / slider.offsetWidth;
         if (leftRelative < 0) {
@@ -101,6 +97,7 @@ export default class StepSlider {
         let leftPercents = approximateValue / segments * 100;
         thumb.style.left = `${leftPercents}%`;
         progress.style.width = `${leftPercents}%`;
+        sliderValue.innerHTML = approximateValue;
 
         //подсвечиваем выбранный шаг
         for(let i = 0; i < sliderSteps.children.length; i++) {
@@ -108,18 +105,19 @@ export default class StepSlider {
         }
         sliderSteps.children[approximateValue].classList.add('slider__step-active');
 
+        document.removeEventListener('pointermove', onPointerUp);
         document.removeEventListener('pointermove', onPointerMove);
-        //document.removeEventListener('pointerup', onPointerUp);
+        slider.classList.remove('slider_dragging');
 
         //всплытие
-        slider.classList.remove('slider_dragging');
         let activeStep = slider.querySelector('.slider__step-active'),
           value = +activeStep.getAttribute('value');
-        thumb.dispatchEvent(new CustomEvent('slider-change', {
+        slider.dispatchEvent(new CustomEvent('slider-change', {
           detail: value,
           bubbles: true
         }));
       }
+
     })
 
     thumb.ondragstart = function() {
